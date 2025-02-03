@@ -1,8 +1,8 @@
-# Airflow ETL Pipeline with PostgreSQL & API Integration
+# Airflow ETL Pipeline with PostgreSQL and OpenWeather API
 
 ## 📌 Project Overview
 This project implements an **ETL (Extract, Transform, Load) pipeline** using **Apache Airflow** to:
-- Extract data from an **external API**.
+- Extract weather data from the **OpenWeather API**.
 - Transform the data for preprocessing.
 - Load the processed data into a **PostgreSQL database**.
 
@@ -32,18 +32,34 @@ The project follows the **Astro CLI structure** (`astro dev init`).
 
 ---
 
+## 🛠️ Tools Used
+### **Apache Airflow**
+- A powerful workflow orchestration tool for scheduling and managing data pipelines.
+- Provides DAGs (Directed Acyclic Graphs) to define ETL workflows.
+
+### **PostgreSQL**
+- A robust, open-source relational database system.
+- Used to store the transformed weather data.
+
+### **OpenWeather API**
+- Provides real-time and historical weather data.
+- Free access available with API key registration.
+
+---
+
 ## ⚙️ Prerequisites
 - **Docker & Docker Compose** installed
 - **Astro CLI** installed (`pip install astro-cli`)
 - **PostgreSQL Database** (running locally or on cloud)
+- **OpenWeather API Key** (Get from [OpenWeather](https://openweathermap.org/api))
 
 ---
 
 ## 🚀 Getting Started
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/your-repo/airflow-etl-pipeline.git
-cd airflow-etl-pipeline
+git clone https://github.com/your-username/ETL-pipeline-airflow-to-postgres.git
+cd ETL-pipeline-airflow-to-postgres
 ```
 
 ### 2️⃣ Start Airflow
@@ -62,7 +78,13 @@ astro dev start
    - Login: `your_user`
    - Password: `your_password`
 
-### 4️⃣ Trigger the DAG
+### 4️⃣ Add OpenWeather API Key
+- Store your **API key** in Airflow Variables:
+  ```bash
+  airflow variables set openweather_api_key "YOUR_API_KEY"
+  ```
+
+### 5️⃣ Trigger the DAG
 1. Open Airflow UI (`http://localhost:8080`)
 2. Enable and run the DAG `etl_pipeline`
 
@@ -70,7 +92,7 @@ astro dev start
 
 ## 🔧 Key Components
 - **DAG (`etl_pipeline.py`)**: Defines the ETL workflow.
-- **Task 1 - Extract**: Fetches data from an API.
+- **Task 1 - Extract**: Fetches weather data from OpenWeather API.
 - **Task 2 - Transform**: Cleans and processes data.
 - **Task 3 - Load**: Inserts data into PostgreSQL.
 
@@ -82,5 +104,5 @@ MIT License
 ---
 
 ## 📬 Contact
-For questions or contributions, reach out via [GitHub Issues](https://github.com/your-repo/airflow-etl-pipeline/issues).
+For questions or contributions, reach out via [GitHub Issues](https://github.com/your-username/ETL-pipeline-airflow-to-postgres/issues).
 
