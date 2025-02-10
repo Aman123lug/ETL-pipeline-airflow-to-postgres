@@ -91,6 +91,11 @@ astro dev start
   ```bash
   airflow variables set openweather_api_key "YOUR_API_KEY"
   ```
+### Or you can set API_KEY on .env File
+```bash
+  API_KEY = "YOUR_API_KEY" # Replace with your API Key
+
+```
 
 ### 5️⃣ Trigger the DAG
 1. Open Airflow UI (`http://localhost:8080`)
