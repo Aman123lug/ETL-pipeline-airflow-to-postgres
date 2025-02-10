@@ -1,12 +1,13 @@
 from airflow import DAG
-# from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.decorators import task, dag
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.utils.dates import days_ago
-import json
 import os
 import requests
 import pendulum
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 with DAG(
@@ -24,23 +25,23 @@ with DAG(
       postgres_hook = PostgresHook(postgres_conn_id="my_postgres_connection" )
       
       create_table_query="""
-      CREATE TABLE weather_data (
-         id SERIAL PRIMARY KEY,
-         city VARCHAR(100) NOT NULL,
-         region VARCHAR(100),
-         country VARCHAR(100) NOT NULL,
-         localtime TIMESTAMP NOT NULL,
-         temperature_c NUMERIC(5, 2) NOT NULL,
-         temperature_f NUMERIC(5, 2) NOT NULL,
-         condition TEXT NOT NULL,
-         humidity INT NOT NULL,
-         )
       
-      """
+      CREATE TABLE IF NOT EXISTS weather_data (
+    id SERIAL PRIMARY KEY,
+    city VARCHAR(100) NOT NULL,
+    region VARCHAR(100),
+    country VARCHAR(100) NOT NULL,
+    time TIMESTAMP NOT NULL, -- Renamed from "localtime" to "time"
+    temperature_c NUMERIC(5, 2) NOT NULL,
+    temperature_f NUMERIC(5, 2) NOT NULL,
+    condition TEXT NOT NULL,
+    humidity INT NOT NULL)
+
+    """
       postgres_hook.run(create_table_query)
    # step: 2 Extract the OpenWeather API data 
       url = "http://api.weatherapi.com/v1/current.json?key=2f986dba45bd45a4a8092627250402&q=India&aqi=yes"
-      API_KEY = "2f986dba45bd45a4a8092627250402"  # Replace with your actual API key
+      API_KEY = os.getenv("API_KEY")  # Replace with your actual API key
       COUNTRY_NAME = "India"  # Replace with your desired city
       BASE_URL = "http://api.weatherapi.com/v1/current.json"
 
@@ -69,7 +70,7 @@ with DAG(
       city = location['name']
       region = location['region']
       country = location['country']
-      localtime = location['localtime']
+      time = location['localtime']
 
       # Extract current weather information
       current = response['current']
@@ -82,7 +83,7 @@ with DAG(
          "city": city,
          "region": region,
          "country": country,
-         "localtime": localtime,
+         "time": time,
          "temperature_c": temperature_c,
          "temperature_f": temperature_f,
          "condition": condition,
@@ -97,7 +98,7 @@ with DAG(
       insert_query = """
       
       INSERT INTO weather_data (
-         city, region, country, localtime,
+         city, region, country, time,
          temperature_c, temperature_f, condition,
          humidity
       ) VALUES (
@@ -110,7 +111,7 @@ with DAG(
          apo_data['city'], 
          apo_data['region'],
          apo_data['country'],
-         apo_data['localtime'],
+         apo_data['time'],
          apo_data['temperature_c'],
          apo_data['temperature_f'],
          apo_data['condition'],

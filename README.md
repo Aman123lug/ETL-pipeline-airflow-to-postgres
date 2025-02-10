@@ -55,6 +55,14 @@ The project follows the **Astro CLI structure** (`astro dev init`).
 
 ---
 
+### Output Sample
+
+#### Postgres table final data
+<img src="img/sample.png">
+
+#### Airflow Interface
+<img src="img/sample2.png">
+
 ## 🚀 Getting Started
 ### 1️⃣ Clone the repository
 ```bash
